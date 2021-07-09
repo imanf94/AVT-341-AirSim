@@ -111,8 +111,8 @@ int main(int argc, char *argv[]) {
 	ros::init(argc, argv, "avt_341_perception_node");
 	
 	ros::NodeHandle n;
-	ros::Subscriber pc_sub = n.subscribe("avt_341/points",2,PointCloudCallback);
-	ros::Subscriber odom_sub = n.subscribe("avt_341/odometry",10, OdometryCallback);
+	ros::Subscriber pc_sub = n.subscribe("/airsim_node/drone_1/lidar/LidarSensor",2,PointCloudCallback);
+	ros::Subscriber odom_sub = n.subscribe("/airsim_node/drone_1/odom_local_ned",10, OdometryCallback);
 	ros::Publisher grid_pub = n.advertise<nav_msgs::OccupancyGrid>("avt_341/occupancy_grid", 1);
 
 	if (ros::param::has("~grid_width") && ros::param::has("~grid_height")){

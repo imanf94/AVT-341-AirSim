@@ -50,7 +50,7 @@ int main(int argc, char *argv[]){
 
   // Create publishers and subscribers
   ros::Publisher path_pub = n.advertise<nav_msgs::Path>("avt_341/local_path", 10);
-  ros::Subscriber odometry_sub = n.subscribe("avt_341/odometry", 10, OdometryCallback);
+  ros::Subscriber odometry_sub = n.subscribe("/airsim_node/drone_1/odom_local_ned", 10, OdometryCallback);
   ros::Subscriber grid_sub = n.subscribe("avt_341/occupancy_grid", 10, GridCallback);
   ros::Subscriber path_sub = n.subscribe("avt_341/global_path", 10, PathCallback);
   ros::Subscriber wp_sub = n.subscribe("avt_341/waypoints", 10, WaypointCallback);
@@ -186,6 +186,11 @@ int main(int argc, char *argv[]){
 
       // most of the calculation time spent on this function call
       bool path_found = planner.CalculateCandidateCosts(grid, odom);
+
+      // IMAN CHANGES !!!!!!!!!!!!!!!!!!!
+      //std::cout << odom << std::endl;
+      //std::cout << grid << std::endl;
+
       if (display){
         plotter.AddMap(grid);
         plotter.SetPath(culled_points);

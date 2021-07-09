@@ -21,6 +21,7 @@
 
 #include "avt_341/control/pid_controller.h"
 #include "geometry_msgs/Twist.h"
+#include "avt_341/CarControls.h"
 #include "nav_msgs/Path.h"
 #include "nav_msgs/Odometry.h"
 
@@ -38,7 +39,7 @@ public:
 	* vehicle state.
 	* \param traj The desired trajectory
 	*/
-	geometry_msgs::Twist GetDcFromTraj(nav_msgs::Path traj);
+	avt_341::CarControls GetDcFromTraj(nav_msgs::Path traj);
 
 	/**
 	* Set the wheelbase of the vehicle in meters

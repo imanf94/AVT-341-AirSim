@@ -40,7 +40,7 @@ int main(int argc, char *argv[])
 
   ros::Publisher path_pub = n.advertise<nav_msgs::Path>("avt_341/global_path", 10);
   ros::Publisher waypoint_pub = n.advertise<nav_msgs::Path>("avt_341/waypoints", 10);
-  ros::Subscriber odometry_sub = n.subscribe("avt_341/odometry", 10, OdometryCallback);
+  ros::Subscriber odometry_sub = n.subscribe("/airsim_node/drone_1/odom_local_ned", 10, OdometryCallback);
   ros::Subscriber map_sub = n.subscribe("avt_341/occupancy_grid", 10, MapCallback);
 
   float goal_dist = 3.0f;

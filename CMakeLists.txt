@@ -20,6 +20,7 @@ if($ENV{ROS_DISTRO} STREQUAL "noetic")
   )
 else()
   find_package(catkin REQUIRED COMPONENTS
+    message_generation
     roscpp
     rospy
     std_msgs
@@ -30,6 +31,15 @@ endif()
 find_package(PCL REQUIRED)
 add_definitions(${PCL_DEFINITIONS})
 
+add_message_files(
+  FILES
+  CarControls.msg
+)
+
+generate_messages(
+  DEPENDENCIES
+  std_msgs
+)
 
 ###################################
 ## catkin specific configuration ##
@@ -37,7 +47,11 @@ add_definitions(${PCL_DEFINITIONS})
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES nato_avt_341
-#  CATKIN_DEPENDS roscpp rospy std_msgs
+  CATKIN_DEPENDS
+   message_runtime 
+   roscpp 
+   rospy 
+   std_msgs
 #  DEPENDS system_lib
 )
 

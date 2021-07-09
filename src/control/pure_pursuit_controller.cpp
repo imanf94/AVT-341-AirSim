@@ -32,8 +32,11 @@ void PurePursuitController::SetVehicleState(nav_msgs::Odometry state){
 	veh_heading_ = utils::GetHeadingFromOrientation(state.pose.pose.orientation);
 }
 
-geometry_msgs::Twist PurePursuitController::GetDcFromTraj(nav_msgs::Path traj) {
+avt_341::CarControls PurePursuitController::GetDcFromTraj(nav_msgs::Path traj) {
 	//initialize the driving command
+	avt_341::CarControls msg;
+	//msg.throttle = 0.0;
+	//msg.steering = 0.0;
 	geometry_msgs::Twist dc;
 	dc.linear.x = 0.0;
 	dc.angular.z = 0.0;
@@ -42,7 +45,7 @@ geometry_msgs::Twist PurePursuitController::GetDcFromTraj(nav_msgs::Path traj) {
 	//make sure the path contains some points
 	int np = traj.poses.size();
 
-	if (np < 2) return dc;
+	if (np < 2) return msg;
 
 	// extract the path that the vehicle needs to follow
 	std::vector<utils::vec2> path;
@@ -109,7 +112,6 @@ geometry_msgs::Twist PurePursuitController::GetDcFromTraj(nav_msgs::Path traj) {
 	sangle = std::min(1.0f, sangle);
 	sangle = std::max(-1.0f, sangle);
 	dc.angular.z = sangle;
-
 	//Use the speed controller to get throttle/braking
 	//addjust the target speed so you back off during hard turns
 	float adj_speed = target_speed * exp(-0.69*pow(fabs(dc.angular.z), 4.0f));
@@ -123,7 +125,14 @@ geometry_msgs::Twist PurePursuitController::GetDcFromTraj(nav_msgs::Path traj) {
 		dc.linear.y = 0.0f;
 		dc.linear.x = std::min(1.0f, throttle);
 	}
-	return dc;
+	msg.throttle = throttle;
+	msg.steering = sangle;
+
+	// IMAN ??????????????????
+	//std::cout << "steering " << sangle << "/n";
+	//std::cout << "throttle " << throttle << "/n";
+
+	return msg;
 }
 
 } // namespace control

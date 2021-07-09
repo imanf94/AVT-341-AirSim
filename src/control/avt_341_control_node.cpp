@@ -18,6 +18,7 @@
 #include "nav_msgs/Path.h"
 //avt_341 includes
 #include "avt_341/control/pure_pursuit_controller.h"
+#include "avt_341/CarControls.h"
 
 nav_msgs::Path control_msg;
 nav_msgs::Odometry state;
@@ -36,13 +37,13 @@ int main(int argc, char *argv[]){
   ros::NodeHandle n;
 
   ros::Publisher dc_pub =
-    n.advertise<geometry_msgs::Twist>("avt_341/cmd_vel",1);
+    n.advertise<avt_341::CarControls>("/airsim_node/drone_1/car_cmd",1);
 
   ros::Subscriber path_sub =
     n.subscribe("avt_341/local_path",1, PathCallback);
 
   ros::Subscriber state_sub =
-    n.subscribe("avt_341/odometry",1, OdometryCallback);
+    n.subscribe("/airsim_node/drone_1/odom_local_ned",1, OdometryCallback);
 
   avt_341::control::PurePursuitController controller;
 	// Set controller parameters
@@ -74,12 +75,13 @@ int main(int argc, char *argv[]){
 
   while (ros::ok()){
     geometry_msgs::Twist dc;
+    avt_341::CarControls msg;
 
     controller.SetVehicleState(state);
-    dc = controller.GetDcFromTraj(control_msg);
+    msg = controller.GetDcFromTraj(control_msg);
 
     
-    dc_pub.publish(dc);
+    dc_pub.publish(msg);
     ros::spinOnce();
 
     r.sleep();
